@@ -19,6 +19,11 @@
 
 ## 구현 결과물
 - 소요시간 `5h 30m`
+- 사용 기술 및 특징
+  - Typescript, React 사용
+  - useRef, setInterval을 이용해 타이머 구현
+  - timetoHMS 함수를 통해 전체시간을 시, 분, 초로 구분
+  
 https://github.com/kwonET/timer/assets/49463954/7a87b37f-8383-45ef-9bd6-d4f6c88cfded
 
 <br/>
