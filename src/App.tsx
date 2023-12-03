@@ -2,14 +2,16 @@ import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 interface ButtonProps {
   isPlay?: boolean;
-  isValid: boolean;
+  isValid?: boolean;
 }
 function App() {
   const [isPlay, setIsPlay] = useState<boolean>(false); // 타이머의 동작 상태 유무
+  const [isStop, setIsStop] = useState<boolean>(false); // 타이머의 멈춤 상태 유무
   const [isValid, setIsValid] = useState<boolean>(false); // 타이머 input 값 유효한지
   const [hour, setHour] = useState<number>(0); //시
   const [minute, setMinute] = useState<number>(0); //분
   const [second, setSecond] = useState<number>(0); //초
+  const [initTime, setInitTime] = useState<number>(0); //입력한 초기값
   const [totalTime, setTotalTime] = useState<number>(0); //초로 환산한 총 시간
 
   //시 input
@@ -39,20 +41,29 @@ function App() {
   // 시작 버튼을 누를 시, 타이머가 시작된다.
   const handlePlayClick = () => {
     setTotalTime(hour * 60 * 60 + minute * 60 + second);
+    setInitTime(hour * 60 * 60 + minute * 60 + second);
     setIsPlay(true);
   };
   const handleUnPlayClick = () => {
     setTotalTime(0);
     setIsPlay(false);
   };
-
+  const handleStopClick = () => {
+    setIsPlay(!isPlay); //멈춤 -> isPlay false / 재시작 -> isPlay true
+    if (isPlay) {
+      setIsStop(!isStop); // 재시작인 경우는 isStop이 false
+    }
+  };
+  const handleInitClick = () => {
+    setTotalTime(initTime);
+    setIsPlay(false);
+  };
   /**
    * timetoHMS : 총 시간을 H M S로 바꿔줌
    */
   const timetoHMS = (totalTime: number) => {
     setHour(Math.floor(totalTime / 3600));
     setMinute(Math.floor((totalTime / 60) % 60));
-
     setSecond(Math.floor(totalTime % 60));
   };
 
@@ -83,6 +94,10 @@ function App() {
     timetoHMS(totalTime);
     console.log(totalTime);
   }, [totalTime]);
+
+  useEffect(() => {
+    timetoHMS(initTime);
+  }, [initTime]);
 
   useEffect(() => {
     // 시, 분, 초 중 1개 이상 생길 경우 활성화
@@ -123,8 +138,14 @@ function App() {
             시작
           </PlayButton>
         )}
-        <StopButton>멈춤</StopButton>
-        <InitButton>초기화</InitButton>
+        {isStop ? (
+          <StopButton onClick={handleStopClick}>재시작</StopButton>
+        ) : (
+          <StopButton onClick={handleStopClick}>멈춤</StopButton>
+        )}
+        <InitButton isPlay={isPlay} onClick={handleInitClick}>
+          초기화
+        </InitButton>
       </ButtonSection>
     </Wrapper>
   );
@@ -159,7 +180,7 @@ const PlayButton = styled.button<ButtonProps>`
   height: 3rem;
   border: none;
   border-radius: 3rem;
-  cursor: ${(props) => (props.isValid ? "pointer" : "none")};
+  cursor: ${(props) => (props.isValid ? "pointer" : "default")};
   background-color: ${(props) => (props.isValid ? "#4d4dff" : "#cedde1f")};
   color: ${(props) => (props.isValid ? "#ffffff" : "#cedde1f")};
 `;
@@ -168,10 +189,16 @@ const StopButton = styled.button`
   height: 3rem;
   border: none;
   border-radius: 3rem;
+  cursor: pointer;
+  background-color: #4d4dff;
+  color: #ffffff;
 `;
-const InitButton = styled.button`
+const InitButton = styled.button<ButtonProps>`
   width: 3rem;
   height: 3rem;
   border: none;
   border-radius: 3rem;
+  cursor: ${(props) => (props.isPlay ? "pointer" : "default")};
+  background-color: ${(props) => (props.isPlay ? "#4d4dff" : "#cedde1f")};
+  color: ${(props) => (props.isPlay ? "#ffffff" : "#cedde1f")};
 `;
