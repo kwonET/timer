@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 interface ButtonProps {
   isPlay?: boolean;
@@ -46,25 +46,27 @@ function App() {
    * timetoHMS : 총 시간을 H M S로 바꿔줌
    */
   const timetoHMS = (totalTime: number) => {
-    if (totalTime === 0) {
-      setSecond(0);
-      return;
-    }
-    if (totalTime >= 3600) {
-      setHour(Math.floor(totalTime / 3600));
-    }
-    if (totalTime >= 60) {
-      setMinute(Math.floor(totalTime / 60));
-    }
+    setHour(Math.floor(totalTime / 3600));
+    setMinute(Math.floor((totalTime / 60) % 60));
+
     setSecond(Math.floor(totalTime % 60));
   };
 
+  const savedCallback = useRef<(() => void) | null>(null);
+  const callback = () => {
+    setTotalTime((totalTime) => totalTime - 1);
+  };
   useEffect(() => {
+    savedCallback.current = callback;
+  });
+  useEffect(() => {
+    const tick = () => {
+      if (savedCallback.current) {
+        savedCallback.current();
+      }
+    };
     if (isPlay) {
-      const timer = setInterval(() => {
-        setTotalTime((totalTime) => totalTime - 1);
-      }, 1000);
-
+      const timer = setInterval(tick, 1000);
       return () => clearInterval(timer);
     }
   }, [isPlay]);

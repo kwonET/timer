@@ -9,5 +9,12 @@
 초기화 버튼은 클릭 시 시작 이전 상태(입력한 시,분,초 초기 상태)로 돌아갑니다.
 동작 상태가 아닌 경우 초기화는 비활성화 상태입니다.
 
-
+참고자료
+setInterval을 useEffect에서 쓰는법
 https://iborymagic.tistory.com/96
+
+useRef의 type에 대해
+https://driip.me/7126d5d5-1937-44a8-98ed-f9065a7c35b5
+
+setInterval을 쓰는 커스텀훅
+https://velog.io/@rkio/Typescript-React%EC%97%90%EC%84%9C-setInterval-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0
