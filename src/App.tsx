@@ -3,6 +3,7 @@ import styled from "styled-components";
 interface ButtonProps {
   isPlay?: boolean;
   isValid?: boolean;
+  isStop?: boolean;
 }
 function App() {
   const [isPlay, setIsPlay] = useState<boolean>(false); // 타이머의 동작 상태 유무
@@ -14,6 +15,9 @@ function App() {
   const [initTime, setInitTime] = useState<number>(0); //입력한 초기값
   const [totalTime, setTotalTime] = useState<number>(0); //초로 환산한 총 시간
 
+  /**
+   * input 에 관한 부분
+   */
   //시 input
   const handleHourChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -38,26 +42,36 @@ function App() {
       setSecond(Number(e.target.value));
     }
   };
-  // 시작 버튼을 누를 시, 타이머가 시작된다.
+
+  /**
+   * button 에 관한 부분
+   */
+  // 시작 버튼 누를 때 작동되는 함수
   const handlePlayClick = () => {
     setTotalTime(hour * 60 * 60 + minute * 60 + second);
     setInitTime(hour * 60 * 60 + minute * 60 + second);
     setIsPlay(true);
   };
+  // 정지 버튼 누를 때 작동되는 함수
   const handleUnPlayClick = () => {
     setTotalTime(0);
     setIsPlay(false);
+    setIsValid(false);
   };
+  // 멈춤 버튼 누를 때 작동되는 함수
   const handleStopClick = () => {
     setIsPlay(!isPlay); //멈춤 -> isPlay false / 재시작 -> isPlay true
-    if (isPlay) {
-      setIsStop(!isStop); // 재시작인 경우는 isStop이 false
-    }
+    setIsStop(!isStop);
   };
+  // 초기화 버튼 누를 때 작동되는 함수
   const handleInitClick = () => {
     setTotalTime(initTime);
     setIsPlay(false);
   };
+
+  /**
+   * 시간, 타이머 에 관한 부분
+   */
   /**
    * timetoHMS : 총 시간을 H M S로 바꿔줌
    */
@@ -66,7 +80,6 @@ function App() {
     setMinute(Math.floor((totalTime / 60) % 60));
     setSecond(Math.floor(totalTime % 60));
   };
-
   /**
    * useRef, setInterval을 이용한 타이머 구현
    */
@@ -83,25 +96,26 @@ function App() {
         savedCallback.current();
       }
     };
-    if (isPlay) {
+    if (isPlay && isValid) {
       const timer = setInterval(tick, 1000);
       return () => clearInterval(timer);
     }
-  }, [isPlay]);
+  }, [isPlay, isValid]);
 
   // 시간에 대한 변경값이 있을 때마다 timetoHMS로 렌더링되는 시 분 초 조절
   useEffect(() => {
     timetoHMS(totalTime);
-    console.log(totalTime);
+    // console.log(totalTime);
   }, [totalTime]);
-
+  // 초기값을 저장해놓음 (초기화 버튼을 위해)
   useEffect(() => {
     timetoHMS(initTime);
   }, [initTime]);
 
+  // 타이머의 input 값 유효 검사를 하는 부분
   useEffect(() => {
     // 시, 분, 초 중 1개 이상 생길 경우 활성화
-    if (hour || minute || second) {
+    if (hour > 0 || minute > 0 || second > 0) {
       setIsValid(true);
     }
     if (hour === 0 && minute === 0 && second === 0) {
@@ -134,16 +148,28 @@ function App() {
             정지
           </PlayButton>
         ) : (
-          <PlayButton isValid={isValid} onClick={handlePlayClick}>
+          <PlayButton
+            isValid={isValid}
+            onClick={handlePlayClick}
+            disabled={!isValid}
+          >
             시작
           </PlayButton>
         )}
         {isStop ? (
-          <StopButton onClick={handleStopClick}>재시작</StopButton>
+          <StopButton isStop={isStop} onClick={handleStopClick}>
+            재시작
+          </StopButton>
         ) : (
-          <StopButton onClick={handleStopClick}>멈춤</StopButton>
+          <StopButton
+            isStop={isStop}
+            onClick={handleStopClick}
+            disabled={!isPlay}
+          >
+            멈춤
+          </StopButton>
         )}
-        <InitButton isPlay={isPlay} onClick={handleInitClick}>
+        <InitButton onClick={handleInitClick} disabled={!isPlay}>
           초기화
         </InitButton>
       </ButtonSection>
@@ -184,7 +210,7 @@ const PlayButton = styled.button<ButtonProps>`
   background-color: ${(props) => (props.isValid ? "#4d4dff" : "#cedde1f")};
   color: ${(props) => (props.isValid ? "#ffffff" : "#cedde1f")};
 `;
-const StopButton = styled.button`
+const StopButton = styled.button<ButtonProps>`
   width: 3rem;
   height: 3rem;
   border: none;
@@ -198,7 +224,7 @@ const InitButton = styled.button<ButtonProps>`
   height: 3rem;
   border: none;
   border-radius: 3rem;
-  cursor: ${(props) => (props.isPlay ? "pointer" : "default")};
-  background-color: ${(props) => (props.isPlay ? "#4d4dff" : "#cedde1f")};
-  color: ${(props) => (props.isPlay ? "#ffffff" : "#cedde1f")};
+  cursor: pointer;
+  background-color: #4d4dff;
+  color: #ffffff;
 `;
