@@ -18,7 +18,7 @@
 <br/>
 
 ## 구현 결과물
-
+- 소요시간 `5h 30m`
 https://github.com/kwonET/timer/assets/49463954/7a87b37f-8383-45ef-9bd6-d4f6c88cfded
 
 <br/>
