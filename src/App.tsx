@@ -37,26 +37,50 @@ function App() {
     setTotalTime(hour * 60 * 60 + minute * 60 + second);
     setIsPlay(true);
   };
+  const handleUnPlayClick = () => {
+    setTotalTime(0);
+    setIsPlay(false);
+  };
+
+  /**
+   * timetoHMS : 총 시간을 H M S로 바꿔줌
+   */
   const timetoHMS = (totalTime: number) => {
+    if (totalTime === 0) {
+      setSecond(0);
+      return;
+    }
     if (totalTime >= 3600) {
-      setHour(totalTime / 3600);
+      setHour(Math.floor(totalTime / 3600));
     }
     if (totalTime >= 60) {
-      setMinute(totalTime / 60);
+      setMinute(Math.floor(totalTime / 60));
     }
-    setSecond(totalTime % 60);
+    setSecond(Math.floor(totalTime % 60));
   };
-  if (isPlay) {
-    setInterval(() => {
-      console.log(totalTime);
-      setTotalTime(totalTime - 1);
-      timetoHMS(totalTime);
-    }, 1000);
-  }
+
+  useEffect(() => {
+    if (isPlay) {
+      const timer = setInterval(() => {
+        setTotalTime((totalTime) => totalTime - 1);
+      }, 1000);
+
+      return () => clearInterval(timer);
+    }
+  }, [isPlay]);
+
+  useEffect(() => {
+    timetoHMS(totalTime);
+    console.log(totalTime);
+  }, [totalTime]);
+
   useEffect(() => {
     // 시, 분, 초 중 1개 이상 생길 경우 활성화
     if (hour || minute || second) {
       setIsValid(true);
+    }
+    if (hour === 0 && minute === 0 && second === 0) {
+      setIsPlay(false);
     }
   }, [hour, minute, second]);
   return (
@@ -80,7 +104,7 @@ function App() {
       </TimeSection>
       <ButtonSection>
         {isPlay ? (
-          <PlayButton isValid={isValid} onClick={handlePlayClick}>
+          <PlayButton isValid={isValid} onClick={handleUnPlayClick}>
             정지
           </PlayButton>
         ) : (
