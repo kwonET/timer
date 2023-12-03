@@ -32,6 +32,9 @@ function App() {
       setSecond(Number(e.target.value));
     }
   };
+  const handlePlayClick = () => {
+    setIsPlay(true);
+  };
   useEffect(() => {
     // 시, 분, 초 중 1개 이상 생길 경우 활성화
     if (hour || minute || second) {
@@ -43,16 +46,22 @@ function App() {
       <TitleSection>타이머</TitleSection>
       <TimeSection>
         <SubtitleSection>시</SubtitleSection>
-        <Hour onChange={handleHourChange}></Hour>
+        <Hour onChange={handleHourChange} disabled={isPlay}></Hour>
         <SubtitleSection>분</SubtitleSection>
-        <Minute onChange={handleMinuteChange}></Minute>
+        <Minute onChange={handleMinuteChange} disabled={isPlay}></Minute>
         <SubtitleSection>초</SubtitleSection>
-        <Second onChange={handleSecondChange}></Second>
+        <Second onChange={handleSecondChange} disabled={isPlay}></Second>
       </TimeSection>
       <ButtonSection>
-        <PlayButton isValid={isValid} onClick={handlePlayClick}>
-          시작
-        </PlayButton>
+        {isPlay ? (
+          <PlayButton isValid={isValid} onClick={handlePlayClick}>
+            시작
+          </PlayButton>
+        ) : (
+          <PlayButton isValid={isValid} onClick={handlePlayClick}>
+            정지
+          </PlayButton>
+        )}
         <StopButton>멈춤</StopButton>
         <InitButton>초기화</InitButton>
       </ButtonSection>
