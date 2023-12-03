@@ -11,6 +11,8 @@ function App() {
   const [minute, setMinute] = useState<number>(0); //분
   const [second, setSecond] = useState<number>(0); //초
   const [totalTime, setTotalTime] = useState<number>(0); //초로 환산한 총 시간
+
+  //시 input
   const handleHourChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     if (Number(e.target.value) <= 24 && Number(e.target.value) >= 0) {
@@ -18,6 +20,7 @@ function App() {
       setHour(Number(e.target.value));
     }
   };
+  // 분 input
   const handleMinuteChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     if (Number(e.target.value) < 60 && Number(e.target.value) >= 0) {
@@ -25,6 +28,7 @@ function App() {
       setMinute(Number(e.target.value));
     }
   };
+  //초 input
   const handleSecondChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     if (Number(e.target.value) < 60 && Number(e.target.value) >= 0) {
@@ -52,6 +56,9 @@ function App() {
     setSecond(Math.floor(totalTime % 60));
   };
 
+  /**
+   * useRef, setInterval을 이용한 타이머 구현
+   */
   const savedCallback = useRef<(() => void) | null>(null);
   const callback = () => {
     setTotalTime((totalTime) => totalTime - 1);
@@ -71,6 +78,7 @@ function App() {
     }
   }, [isPlay]);
 
+  // 시간에 대한 변경값이 있을 때마다 timetoHMS로 렌더링되는 시 분 초 조절
   useEffect(() => {
     timetoHMS(totalTime);
     console.log(totalTime);
@@ -85,6 +93,7 @@ function App() {
       setIsPlay(false);
     }
   }, [hour, minute, second]);
+
   return (
     <Wrapper>
       <TitleSection>타이머</TitleSection>
