@@ -18,7 +18,7 @@
 <br/>
 
 ## 구현 결과물
-- 소요시간 `5h 30m`
+- 소요시간 `4h 30m`
 - 사용 기술 및 특징
   - Typescript, React 사용
   - useRef, setInterval을 이용해 타이머 구현
