@@ -1,46 +1,10 @@
-# Getting Started with Create React App
+시, 분, 초 를 입력 받는 3개 인풋이 있습니다. (초기값 = 0)
+시작, 멈춤, 초기화 3개 버튼이 있습니다.
+- [x] 시작 버튼은 주어진 인풋 3개 중 값이 1이상이 생긴 경우 활성화되며 클릭 시 카운트가 시작(동작 상태)됩니다. 
+- [ ] 모든 인풋이 0이 되어야 동작 상태는 종료되며 
+- [ ] 동작 상태 중 시, 분, 초 인풋은 비활성화 상태로 값만 변경되고 시작 버튼은 정지 버튼으로 변경됩니다.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
-## Available Scripts
-
-In the project directory, you can run:
-
-### `yarn start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `yarn test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `yarn build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+정지 버튼을 클릭 시 모든 값은 0이 되며 초기 상태로 돌아갑니다.
+멈춤 버튼은 클릭 시 타이머가 멈추며 재시작으로 버튼이 변경됩니다. 재시작을 클릭 시 멈췄던 타이머가 다시 작동하며 다시 멈춤 상태로 변경됩니다.
+초기화 버튼은 클릭 시 시작 이전 상태(입력한 시,분,초 초기 상태)로 돌아갑니다.
+동작 상태가 아닌 경우 초기화는 비활성화 상태입니다.

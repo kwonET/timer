@@ -10,7 +10,7 @@ function App() {
   const [hour, setHour] = useState<number>(0); //시
   const [minute, setMinute] = useState<number>(0); //분
   const [second, setSecond] = useState<number>(0); //초
-  const handlePlay = () => {};
+  const [totalTime, setTotalTime] = useState<number>(0); //초로 환산한 총 시간
   const handleHourChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     if (Number(e.target.value) <= 24 && Number(e.target.value) >= 0) {
@@ -32,9 +32,27 @@ function App() {
       setSecond(Number(e.target.value));
     }
   };
+  // 시작 버튼을 누를 시, 타이머가 시작된다.
   const handlePlayClick = () => {
+    setTotalTime(hour * 60 * 60 + minute * 60 + second);
     setIsPlay(true);
   };
+  const timetoHMS = (totalTime: number) => {
+    if (totalTime >= 3600) {
+      setHour(totalTime / 3600);
+    }
+    if (totalTime >= 60) {
+      setMinute(totalTime / 60);
+    }
+    setSecond(totalTime % 60);
+  };
+  if (isPlay) {
+    setInterval(() => {
+      console.log(totalTime);
+      setTotalTime(totalTime - 1);
+      timetoHMS(totalTime);
+    }, 1000);
+  }
   useEffect(() => {
     // 시, 분, 초 중 1개 이상 생길 경우 활성화
     if (hour || minute || second) {
@@ -46,20 +64,28 @@ function App() {
       <TitleSection>타이머</TitleSection>
       <TimeSection>
         <SubtitleSection>시</SubtitleSection>
-        <Hour onChange={handleHourChange} disabled={isPlay}></Hour>
+        <Hour onChange={handleHourChange} disabled={isPlay} value={hour}></Hour>
         <SubtitleSection>분</SubtitleSection>
-        <Minute onChange={handleMinuteChange} disabled={isPlay}></Minute>
+        <Minute
+          onChange={handleMinuteChange}
+          disabled={isPlay}
+          value={minute}
+        ></Minute>
         <SubtitleSection>초</SubtitleSection>
-        <Second onChange={handleSecondChange} disabled={isPlay}></Second>
+        <Second
+          onChange={handleSecondChange}
+          disabled={isPlay}
+          value={second}
+        ></Second>
       </TimeSection>
       <ButtonSection>
         {isPlay ? (
           <PlayButton isValid={isValid} onClick={handlePlayClick}>
-            시작
+            정지
           </PlayButton>
         ) : (
           <PlayButton isValid={isValid} onClick={handlePlayClick}>
-            정지
+            시작
           </PlayButton>
         )}
         <StopButton>멈춤</StopButton>
